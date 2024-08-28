@@ -40,8 +40,8 @@ body {
     padding: 10px;
     margin: 15px;
   clip-path: polygon(0 40%, 100% 0, 100% 60%, 0% 100%);
-  position: relative; /* Necesario para manejar el texto correctamente */
-  overflow: hidden; /* Asegura que el contenido no se desborde del botón */
+  position: relative;
+  overflow: hidden; 
 }
 .header .headerbuttons span {
     display: inline-block;
