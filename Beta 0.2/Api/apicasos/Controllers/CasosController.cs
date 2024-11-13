@@ -42,8 +42,21 @@ namespace MiAplicacion.Controllers
         {
             try
             {
-                // Trama de creación de caso
-                string tramaCrearCaso = $"{{\"codigo_servicio\":\"WSSD03\",\"usuario\":616,\"fecha_programada\":,\"descripcion\":}}";
+                // Verificar si el caso tiene fecha y descripción
+                if (string.IsNullOrEmpty(caso.Fecha) || string.IsNullOrEmpty(caso.Descripcion))
+                {
+                    return BadRequest("La fecha y la descripción son obligatorias.");
+                }
+
+                // Convertir la fecha en formato DateTime (asegurándose de que esté en el formato correcto)
+                DateTime fechaProgramada;
+                if (!DateTime.TryParse(caso.Fecha, out fechaProgramada))
+                {
+                    return BadRequest("La fecha proporcionada no tiene un formato válido.");
+                }
+
+                // Trama de creación de caso con los datos correctos
+                string tramaCrearCaso = $"{{\"codigo_servicio\":\"WSSD03\",\"usuario\":616,\"fecha_programada\":\"{fechaProgramada:yyyy-MM-dd}\",\"descripcion\":\"{caso.Descripcion}\"}}";
 
                 // Envío de la trama y recepción de la respuesta
                 string response = _socketService.EnviarTramaPorSocket(tramaCrearCaso);
@@ -63,7 +76,7 @@ namespace MiAplicacion.Controllers
             try
             {
                 // Trama de prueba para crear un caso
-                string tramaPrueba = $"{{\"codigo_servicio\":\"WSSD03\",\"usuario\":2641,\"descripcion\":}}";
+                string tramaPrueba = $"{{\"codigo_servicio\":\"WSSD03\",\"usuario\":2641,\"descripcion\":\"{pruebaCaso.Descripcion}\"}}";
 
                 // Envío de la trama de prueba y recepción de la respuesta
                 string response = _socketService.EnviarTramaPorSocket(tramaPrueba);
@@ -80,7 +93,7 @@ namespace MiAplicacion.Controllers
     // DTO para los datos de entrada del caso
     public class CasoDto
     {
-        public string Fecha { get; set; } = string.Empty;
+        public string Fecha { get; set; } = string.Empty;   // Fecha en formato string (yyyy-MM-dd)
         public string Descripcion { get; set; } = string.Empty;
     }
 
