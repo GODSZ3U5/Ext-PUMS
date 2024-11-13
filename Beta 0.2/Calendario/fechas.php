@@ -1,32 +1,40 @@
 <?php
-$startDate = new DateTime();  // Fecha actual
-$endDate = (clone $startDate)->modify('+2 months');  // 2 meses después
+$testMode = false;  
 
-$interval = new DateInterval('P1D');  // Intervalo de un día
+if ($testMode) {
+    $startDate = new DateTime('2024-12-01');
+} else {
+    $startDate = new DateTime();  
+}
+
+$endDate = (clone $startDate)->modify('+2 months'); 
+
+$interval = new DateInterval('P1D');
 $dateRange = new DatePeriod($startDate, $interval, $endDate);
 
-// Conexión a la base de datos
-$servername = "172.0.0.1";
-$username = "root";
-$password = "";
-$database = "calendario";
-$conn = new mysqli($servername, $username, $password, $database);
+include 'conexion.php';
 
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
+$sql_delete = "DELETE FROM agendamiento";
+$connection->query($sql_delete);
+
 
 foreach ($dateRange as $date) {
     $fecha = $date->format('Y-m-d');
-    // Bloquear automáticamente sábados y domingos
+
+   
     if (in_array($date->format('N'), [6, 7])) {
-        $sql = "INSERT INTO disponibilidad (fecha, bloqueado) VALUES ('$fecha', 1)";
+        $sql_insert = "INSERT INTO agendamiento (fecha, deshabilitado) VALUES ('$fecha', 1)";
+        $sql_turnos = "UPDATE agendamiento SET turnos_disponibles = 0 WHERE fecha = '$fecha'";
     } else {
-        $sql = "INSERT INTO disponibilidad (fecha) VALUES ('$fecha')";
+        $sql_insert = "INSERT INTO agendamiento (fecha) VALUES ('$fecha')";
+        $sql_turnos = "UPDATE agendamiento SET turnos_disponibles = 4 WHERE fecha = '$fecha'";
     }
-    $conn->query($sql);
+
+
+    $connection->query($sql_insert);
+    $connection->query($sql_turnos);
 }
 
 echo "Fechas generadas con éxito.";
-$conn->close();
+$connection->close();
 ?>

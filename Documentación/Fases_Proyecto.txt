@@ -1,0 +1,56 @@
+Socket para crear caso: 
+
+IP : 
+172.17.1.2
+
+Puerto :
+13015
+
+trama de envio :
+"{\"codigo_servicio\":\"WSSD03\",\"usuario\":2641,\"descripcion\":juan velasco-descripcion -contraseña \"}"
+
+
+sockets de consulta de casos en centauro
+
+IP : 
+172.17.1.2
+
+Puerto 
+13015
+
+trama de envio :
+"{\"codigo_servicio\":\"WSSD06\",\"usuario\":2641\"}"
+
+
+-------------------------- Tareas
+Ruta de apendizaje 
+Fase 1
+
+averiguar que es una API - API o servicio REST
+Visual Studio - ofrece la herramienta de swagger
+como desarrollar api en C#
+Probar APIS desde Postman
+
+fase- 2 
+
+es desarrollar al api consumiendo la configuracion del socket de consulta 
+
+desarrollar la API cosumiendo el socket para crear el caso 
+
+Fase 3 
+
+publicar la api en el servidor - JUAN y DHILAN - servidores de lafayette
+
+FASE 4
+
+desarrollar la parte grafica (Formulario - diseñado )
+cosumir la api desde el fomulario por medio de PHP - Enviandole los datos 
+
+Fase 5
+
+Publicar la parte grafica - JUAN y DHILAN 
+
+
+
+
+

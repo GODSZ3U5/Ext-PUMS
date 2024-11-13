@@ -1,0 +1,7 @@
+.custom-bordered {
+    border-color: rgba(0, 123, 255, 0.5); /* Cambia el color y la opacidad del borde */
+}
+
+.custom-bordered td, .custom-bordered th {
+    border-color: rgba(0, 123, 255, 0.5); /* Aplica también a las celdas */
+}
