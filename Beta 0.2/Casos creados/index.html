@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Datos de Mantenimiento</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="mb-4">Lista de Datos de Mantenimiento</h2>
+        <table class="table table-bordered" id="datosTabla">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Cargo</th>
+                    <th>Usuario Da</th>
+                    <th>Activo Fijo</th>
+                    <th>Contraseña</th>
+                    <th>Contacto</th>
+                    <th>Tarea</th>
+                    <th>Especificación</th>
+                    <th>Observaciones</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <!-- Las filas se agregarán aquí dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Funcion para recibir datos y llenar la tabla
+        $(document).ready(function() {
+            // Simula la recepción de datos (modifica esta parte para que se conecte con tu archivo principal)
+            window.addEventListener('message', function(event) {
+                const datos = event.data;
+                if (datos && datos.tipo === 'nuevoDato') {
+                    agregarFila(datos.contenido);
+                }
+            });
+        });
+
+        function agregarFila(data) {
+            const fila = `
+                <tr>
+                    <td>${data.usuario}</td>
+                    <td>${data.nombre}</td>
+                    <td>${data.cargo}</td>
+                    <td>${data.usuarioDa}</td>
+                    <td>${data.activoFijo}</td>
+                    <td>${data.contrasena}</td>
+                    <td>${data.contacto}</td>
+                    <td>${data.tarea}</td>
+                    <td>${data.especificacion}</td>
+                    <td>${data.observaciones}</td>
+                    <td>${data.fecha}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editarFila(this)">Editar</button>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button>
+                    </td>
+                </tr>`;
+            $('#cuerpoTabla').append(fila);
+        }
+
+        function editarFila(boton) {
+            const fila = $(boton).closest('tr');
+            const celdas = fila.find('td').not(':last');
+            celdas.each(function() {
+                const valorActual = $(this).text();
+                $(this).html(`<input type="text" class="form-control" value="${valorActual}">`);
+            });
+            $(boton).text('Guardar').attr('onclick', 'guardarFila(this)');
+        }
+
+        function guardarFila(boton) {
+            const fila = $(boton).closest('tr');
+            fila.find('td').not(':last').each(function() {
+                const input = $(this).find('input');
+                if (input.length) {
+                    $(this).text(input.val());
+                }
+            });
+            $(boton).text('Editar').attr('onclick', 'editarFila(this)');
+        }
+
+        function eliminarFila(boton) {
+            $(boton).closest('tr').remove();
+        }
+    </script>
+</body>
+</html>

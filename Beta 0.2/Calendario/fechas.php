@@ -18,18 +18,19 @@ $sql_delete = "DELETE FROM agendamiento";
 $connection->query($sql_delete);
 
 
+$hoy = new DateTime(); // Obtener la fecha actual
+
 foreach ($dateRange as $date) {
     $fecha = $date->format('Y-m-d');
 
-   
-    if (in_array($date->format('N'), [6, 7])) {
+    // Deshabilitar sábados y domingos
+    if (in_array($date->format('N'), [6, 7]) || $fecha === $hoy->format('Y-m-d')) {
         $sql_insert = "INSERT INTO agendamiento (fecha, deshabilitado) VALUES ('$fecha', 1)";
         $sql_turnos = "UPDATE agendamiento SET turnos_disponibles = 0 WHERE fecha = '$fecha'";
     } else {
         $sql_insert = "INSERT INTO agendamiento (fecha) VALUES ('$fecha')";
         $sql_turnos = "UPDATE agendamiento SET turnos_disponibles = 4 WHERE fecha = '$fecha'";
     }
-
 
     $connection->query($sql_insert);
     $connection->query($sql_turnos);

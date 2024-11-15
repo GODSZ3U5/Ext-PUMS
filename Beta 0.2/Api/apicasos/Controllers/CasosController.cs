@@ -56,7 +56,7 @@ namespace MiAplicacion.Controllers
                 }
 
                 // Trama de creación de caso con los datos correctos
-                string tramaCrearCaso = $"{{\"codigo_servicio\":\"WSSD03\",\"usuario\":616,\"fecha_programada\":\"{fechaProgramada:yyyy-MM-dd}\",\"descripcion\":\"{caso.Descripcion}\"}}";
+                string tramaCrearCaso = $"{{\"codigo_servicio\":\"WSSD09\",\"usuario\":{caso.usuario},\"descripcion\":\"{caso.Descripcion}\",\"fecha_programada\":\"{fechaProgramada:yyyy-MM-dd}\"}}";
 
                 // Envío de la trama y recepción de la respuesta
                 string response = _socketService.EnviarTramaPorSocket(tramaCrearCaso);
@@ -93,8 +93,10 @@ namespace MiAplicacion.Controllers
     // DTO para los datos de entrada del caso
     public class CasoDto
     {
-        public string Fecha { get; set; } = string.Empty;   // Fecha en formato string (yyyy-MM-dd)
+        public string usuario {get; set;} = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
+        public string Fecha { get; set; } = string.Empty;   // Fecha en formato string (yyyy-MM-dd)
+        
     }
 
     // DTO para los datos de entrada en el método de prueba

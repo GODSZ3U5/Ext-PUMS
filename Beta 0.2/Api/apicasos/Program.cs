@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Configurar el servicio del socket con el servidor y puerto especificados
-builder.Services.AddSingleton(new SocketService("172.17.1.7", 13015)); 
+builder.Services.AddSingleton(new SocketService("172.17.1.2", 13015)); 
 
 // Configurar CORS
 builder.Services.AddCors(options =>
