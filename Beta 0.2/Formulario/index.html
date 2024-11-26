@@ -142,6 +142,11 @@
                 <!-- Columna izquierda -->
                 <div class="left-column">
                     <div class="form-group">
+                        <label for="usuario">Usuario</label>
+                        <span class="tooltip-icon" data-toggle="tooltip" title="Su usuario en centauro">&#x3f;</span>
+                        <input type="text" class="form-control" id="usuario" placeholder="" required>
+                    </div>
+                    <div class="form-group">
                         <label for="nombre">Nombre</label>
                         <span class="tooltip-icon" data-toggle="tooltip" title="Su nombre de usuario">&#x3f;</span>
                         <input type="text" class="form-control" id="nombre" placeholder="" required>
@@ -218,7 +223,7 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+   $(document).ready(function () {
     const getValidRange = () => {
         const startDate = new Date();
         startDate.setDate(1); // Primer día del mes actual
@@ -236,42 +241,36 @@
             right: ''
         },
         validRange: getValidRange(), // Limitar a los dos próximos meses
-        dayCellClassNames: function(arg) {
-            const currentDate = new Date();
-            const month = currentDate.getMonth();
-            const day = currentDate.getDate();
-        }
     });
 
     // Evento para cuando se hace clic en una fecha
     calendar.on('dateClick', function(info) {
-    const fechaSeleccionada = info.date;  // Objeto Date
-    const fechaFormateada = fechaSeleccionada.toISOString().split('T')[0];  // Formato YYYY-MM-DD
-    
-    $('#fecha_mantenimiento').val(fechaFormateada);
+        const fechaSeleccionada = info.date;  // Objeto Date
+        const fechaFormateada = fechaSeleccionada.toISOString().split('T')[0];  // Formato YYYY-MM-DD
+        
+        $('#fecha_mantenimiento').val(fechaFormateada);
 
-    // Verificar disponibilidad de la fecha
-    fetch('http://localhost:8080/Proyectos/Ext%20PUMS/Beta%200.2/Calendario/turnos.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `fecha=${fechaFormateada}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.error) {
-            alert("El día seleccionado no está disponible.");
-            $('#mantenimientoForm').find(':submit').prop('disabled', true);  // Desactivar el botón de envío
-        } else {
-            alert("Seleccionaste el día: " + fechaFormateada);
-            $('#mantenimientoForm').find(':submit').prop('disabled', false);  // Habilitar el botón de envío
-            console.log('Respuesta de la API:', data);
-        }
-    })
-    .catch(error => {
-        console.error('Error en la solicitud:', error);
+        // Verificar disponibilidad de la fecha
+        fetch('http://localhost:8080/Proyectos/Ext%20PUMS/Beta%200.2/Calendario/turnos.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `fecha=${fechaFormateada}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert("El día seleccionado no está disponible.");
+                $('#mantenimientoForm').find(':submit').prop('disabled', true);  // Desactivar el botón de envío
+            } else {
+                alert("Seleccionaste el día: " + fechaFormateada);
+                $('#mantenimientoForm').find(':submit').prop('disabled', false);  // Habilitar el botón de envío
+                console.log('Respuesta de la API:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error en la solicitud:', error);
+        });
     });
-});
-
 
     // Renderiza el calendario
     calendar.render();
@@ -296,7 +295,7 @@ $('#mantenimientoForm').on('submit', function(event) {
     const fecha = $('#fecha_mantenimiento').val();
 
     // Concatenar la descripción
-    const descripcion = `${usuarioDa} ${activoFijo} ${especificacion} "EXT" ${contacto} ${tarea} `;
+    const descripcion = `${usuarioDa} ${especificacion} "EXT" ${contacto} ${tarea}`;
 
     // Construir el objeto JSON con todos los datos, incluyendo la fecha
     const data = {
@@ -304,9 +303,43 @@ $('#mantenimientoForm').on('submit', function(event) {
         descripcion: descripcion,
         fecha: fecha
     };
-
-    // Enviar los datos
-    sendFormData(data);
+    // JSON de envío al formulario
+    const formData = {
+        usuario: usuario,
+        nombre: nombre,
+        cargo: cargo,
+        usuario_da: usuarioDa,
+        activo_fijo: activoFijo,
+        contrasena: contrasena,
+        contacto: contacto,
+        tarea: tarea,
+        especificacion: especificacion,
+        observaciones: observaciones,
+        fecha: fecha,
+    };
+    // Luego, guardar en la base de datos
+    $.ajax({
+        url: 'http://localhost:8080/Proyectos/Ext%20PUMS/Beta%200.2/Casos%20creados/insertar.php',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function(result) {
+            if (result.success) {
+                alert('Datos insertados correctamente.');
+            } else {
+                alert('Error al insertar datos: ' + result.error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error en la solicitud AJAX:', error);
+            alert('Hubo un error al enviar los datos.');
+        }
+    })
+    .catch(error => console.error('Error:', error));
+    console.log("Datos a enviar a la base de datos", formData);
+    console.log("Datos a enviar a la api", data)
+    // Enviar los datos al servidor de la API para creación del caso (con solo los campos necesarios)
+    sendFormData({usuario: usuario, descripcion: descripcion, fecha: fecha });
 });
 
 // Función para enviar los datos del formulario
@@ -336,7 +369,6 @@ function sendFormData(data) {
         }
     });
 }
-
  </script>
  
 

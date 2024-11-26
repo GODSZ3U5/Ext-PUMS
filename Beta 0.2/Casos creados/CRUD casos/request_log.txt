@@ -1,0 +1,39 @@
+Array
+(
+    [nombre] => ehrhret
+    [cargo] => herthrt
+    [usuario_da] => herthr
+    [activo_fijo_equipo] => therth
+    [contrasena] => rtehreth
+    [contacto] => rhreth
+    [tarea] => therth
+    [especificacion] => etrhrth
+    [observaciones] => rhrtehrth
+    [fecha] => 2024-11-15
+)
+Array
+(
+    [nombre] => ehrhret
+    [cargo] => herthrt
+    [usuario_da] => herthr
+    [activo_fijo_equipo] => therth
+    [contrasena] => rtehreth
+    [contacto] => rhreth
+    [tarea] => therth
+    [especificacion] => etrhrth
+    [observaciones] => rhrtehrth
+    [fecha] => 2024-11-15
+)
+Array
+(
+    [nombre] => ehrhret
+    [cargo] => herthrt
+    [usuario_da] => herthr
+    [activo_fijo_equipo] => therth
+    [contrasena] => rtehreth
+    [contacto] => rhreth
+    [tarea] => therth
+    [especificacion] => etrhrth
+    [observaciones] => rhrtehrth
+    [fecha] => 2024-11-15
+)

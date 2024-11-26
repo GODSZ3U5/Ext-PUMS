@@ -15,93 +15,59 @@ namespace MiAplicacion.Controllers
         {
             _socketService = socketService;
         }
-
-        // Método GET para consultar casos
-        [HttpGet("consultar-casos")]
-        public IActionResult ConsultarCasos()
-        {
-            try
-            {
-                // Trama de consulta de casos
-                string tramaConsulta = "{\"codigo_servicio\":\"WSSD06\",\"usuario\":2641}";
-
-                // Envío de la trama y recepción de la respuesta
-                string response = _socketService.EnviarTramaPorSocket(tramaConsulta);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al consultar casos: {ex.Message}");
-            }
-        }
-
         // Método POST para crear un caso
         [HttpPost("crear-caso")]
-        public IActionResult CrearCaso([FromBody] CasoDto caso)
+public IActionResult CrearCaso([FromBody] CasoDto caso)
+{
+    try
+    {
+        // Log: Datos recibidos
+        Console.WriteLine($"Datos recibidos: Usuario={caso.usuario}, Descripción={caso.descripcion}, Fecha={caso.fecha}");
+
+        // Validar fecha y descripción
+        if (string.IsNullOrEmpty(caso.fecha) || string.IsNullOrEmpty(caso.descripcion))
         {
-            try
-            {
-                // Verificar si el caso tiene fecha y descripción
-                if (string.IsNullOrEmpty(caso.Fecha) || string.IsNullOrEmpty(caso.Descripcion))
-                {
-                    return BadRequest("La fecha y la descripción son obligatorias.");
-                }
-
-                // Convertir la fecha en formato DateTime (asegurándose de que esté en el formato correcto)
-                DateTime fechaProgramada;
-                if (!DateTime.TryParse(caso.Fecha, out fechaProgramada))
-                {
-                    return BadRequest("La fecha proporcionada no tiene un formato válido.");
-                }
-
-                // Trama de creación de caso con los datos correctos
-                string tramaCrearCaso = $"{{\"codigo_servicio\":\"WSSD09\",\"usuario\":{caso.usuario},\"descripcion\":\"{caso.Descripcion}\",\"fecha_programada\":\"{fechaProgramada:yyyy-MM-dd}\"}}";
-
-                // Envío de la trama y recepción de la respuesta
-                string response = _socketService.EnviarTramaPorSocket(tramaCrearCaso);
-
-                return Ok(new { mensaje = "Trama enviada correctamente", respuesta = response });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al crear caso: {ex.Message}");
-            }
+            Console.WriteLine("Error: La fecha o la descripción están vacías.");
+            return BadRequest("La fecha y la descripción son obligatorias.");
         }
 
-        // Método POST de prueba para crear un caso
-        [HttpPost("probar-creacion-caso")]
-        public IActionResult ProbarCrearCaso([FromBody] PruebaCasoDto pruebaCaso)
+        // Convertir la fecha a DateTime
+        DateTime fechaProgramada;
+        if (!DateTime.TryParse(caso.fecha, out fechaProgramada))
         {
-            try
-            {
-                // Trama de prueba para crear un caso
-                string tramaPrueba = $"{{\"codigo_servicio\":\"WSSD03\",\"usuario\":2641,\"descripcion\":\"{pruebaCaso.Descripcion}\"}}";
-
-                // Envío de la trama de prueba y recepción de la respuesta
-                string response = _socketService.EnviarTramaPorSocket(tramaPrueba);
-
-                return Ok(new { mensaje = "Trama de prueba enviada correctamente", respuesta = response });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al enviar trama de prueba: {ex.Message}");
-            }
+            Console.WriteLine("Error: La fecha proporcionada no tiene un formato válido.");
+            return BadRequest("La fecha proporcionada no tiene un formato válido.");
         }
+
+        // Log: Fecha convertida
+        Console.WriteLine($"Fecha convertida correctamente: {fechaProgramada:yyyy-MM-dd}");
+
+        // Crear la trama para el socket
+        string tramaCrearCaso = $"{{\"codigo_servicio\":\"WSSD09\",\"usuario\":{caso.usuario},\"descripcion\":\"{caso.descripcion}\",\"fecha_programada\":\"{fechaProgramada:yyyy-MM-dd}\"}}";
+
+        // Log: Trama a enviar
+        Console.WriteLine($"Trama a enviar: {tramaCrearCaso}");
+
+        // Enviar la trama al socket
+        string response = _socketService.EnviarTramaPorSocket(tramaCrearCaso);
+
+        // Log: Respuesta del socket
+        Console.WriteLine($"Respuesta del socket: {response}");
+
+        return Ok(new { mensaje = "Trama enviada correctamente", respuesta = response });
     }
-
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error en el servidor: {ex.Message}");
+        return StatusCode(500, $"Error al crear caso: {ex.Message}");
+    }
+}
     // DTO para los datos de entrada del caso
     public class CasoDto
     {
         public string usuario {get; set;} = string.Empty;
-        public string Descripcion { get; set; } = string.Empty;
-        public string Fecha { get; set; } = string.Empty;   // Fecha en formato string (yyyy-MM-dd)
+        public string descripcion { get; set; } = string.Empty;
+        public string fecha { get; set; } = string.Empty;   // Fecha en formato string (yyyy-MM-dd)
         
     }
-
-    // DTO para los datos de entrada en el método de prueba
-    public class PruebaCasoDto
-    {
-        public string Descripcion { get; set; } = string.Empty;
-    }
-}
+    }}

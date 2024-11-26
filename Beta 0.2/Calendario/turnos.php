@@ -46,7 +46,7 @@ if (isset($_POST['fecha'])) {
                 echo json_encode(["error" => "Error al reservar el turno: " . $stmtUpdate->error]);
             }
         } else {
-            echo json_encode(["error" => "El día seleccionado no está disponible."]);
+            echo json_encode(["error" => "El día seleccionado no está disponible, Porfavor seleccione otro"]);
         }
     } else {
         echo json_encode(["error" => "La fecha seleccionada no es válida o no está registrada."]);

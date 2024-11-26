@@ -1,32 +1,41 @@
 <?php
-// Incluir la conexión a la base de datos
+header('Content-Type: application/json');
 include('conexion.php');
 
-// Obtener los datos enviados por AJAX
-$data = json_decode(file_get_contents('php://input'), true);
+$formData = json_decode(file_get_contents("php://input"), true);
 
-// Extraer los valores del JSON
-$usuario = $data['usuario'];
-$descripcion = $data['descripcion'];
-$fecha = $data['fecha'];
-
-// Crear la consulta SQL para insertar los datos
-$sql = "INSERT INTO casos (usuario, descripcion, fecha) VALUES (?, ?, ?)";
-
-// Preparar la consulta
-$stmt = $conn->prepare($sql);
-
-// Vincular los parámetros
-$stmt->bind_param("sss", $usuario, $descripcion, $fecha);
-
-// Ejecutar la consulta
-if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Caso creado correctamente."]);
-} else {
-    echo json_encode(["success" => false, "message" => "Error al crear el caso."]);
+if (!$formData) {
+    echo json_encode(["success" => false, "error" => "No se recibieron datos válidos."]);
+    exit;
 }
 
-// Cerrar la conexión
-$stmt->close();
+try {
+    $stmt = $conn->prepare("INSERT INTO mantenimiento (nombre, cargo, usuario_da, activo_fijo_equipo, contrasena, contacto, tarea, especificacion, observaciones, fecha) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param(
+        "ssssssssss",
+        $formData['nombre'],
+        $formData['cargo'],
+        $formData['usuario_da'],
+        $formData['activo_fijo'],
+        $formData['contrasena'],
+        $formData['contacto'],
+        $formData['tarea'],
+        $formData['especificacion'],
+        $formData['observaciones'],
+        $formData['fecha']
+    );
+
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true]);
+    } else {
+        throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
+    }
+
+    $stmt->close();
+} catch (Exception $e) {
+    echo json_encode(["success" => false, "error" => $e->getMessage()]);
+}
+
 $conn->close();
+exit;
 ?>

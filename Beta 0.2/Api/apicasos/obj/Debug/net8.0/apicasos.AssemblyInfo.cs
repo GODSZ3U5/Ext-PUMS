@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("apicasos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c2e6dd52e770ff3c1d28b384bbc6efebd7e36ae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+adc9f7d98a3f0be238a70420195163f753ff6be2")]
 [assembly: System.Reflection.AssemblyProductAttribute("apicasos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("apicasos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

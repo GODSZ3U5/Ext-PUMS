@@ -3,95 +3,410 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabla de Datos de Mantenimiento</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Gestión de Casos</title>
+    <!-- Incluye Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="container mt-5">
-        <h2 class="mb-4">Lista de Datos de Mantenimiento</h2>
-        <table class="table table-bordered" id="datosTabla">
-            <thead class="thead-dark">
-                <tr>
-                    <th>Usuario</th>
-                    <th>Nombre</th>
-                    <th>Cargo</th>
-                    <th>Usuario Da</th>
-                    <th>Activo Fijo</th>
-                    <th>Contraseña</th>
-                    <th>Contacto</th>
-                    <th>Tarea</th>
-                    <th>Especificación</th>
-                    <th>Observaciones</th>
-                    <th>Fecha</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody id="cuerpoTabla">
-                <!-- Las filas se agregarán aquí dinámicamente -->
-            </tbody>
-        </table>
+
+<div class="container mt-5">
+    <h1>Gestión de Casos</h1>
+
+    <!-- Filtro de Búsqueda -->
+    <form id="formBuscar" class="mb-3">
+        <input type="text" id="buscarNombre" class="form-control" placeholder="Buscar por Nombre">
+        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+    </form>
+
+    <!-- Tabla de Casos -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Cargo</th>
+                <th>Usuario DA</th>
+                <th>Activo Fijo</th>
+                <th>Contrasena</th>
+                <th>Contacto</th>
+                <th>Tarea</th>
+                <th>Especificación</th>
+                <th>Observaciones</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="cuerpoTabla">
+            <!-- Aquí se agregan las filas dinámicamente -->
+        </tbody>
+    </table>
+
+    <!-- Botón para crear nuevo caso -->
+    <button class="btn btn-success mb-3" data-toggle="modal" data-target="#crearModal">Crear Caso</button>
+</div>
+
+<!-- Modal para Crear -->
+<div class="modal fade" id="crearModal" tabindex="-1" role="dialog" aria-labelledby="crearModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="crearModalLabel">Crear Caso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formCrear">
+                    <div class="form-group">
+                        <label for="nombreCrear">Nombre</label>
+                        <input type="text" class="form-control" id="nombreCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cargoCrear">Cargo</label>
+                        <input type="text" class="form-control" id="cargoCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuario_daCrear">Usuario DA</label>
+                        <input type="text" class="form-control" id="usuario_daCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activo_fijo_equipoCrear">Activo Fijo</label>
+                        <input type="text" class="form-control" id="activo_fijo_equipoCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contrasenaCrear">Contraseña</label>
+                        <input type="text" class="form-control" id="contrasenaCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactoCrear">Contacto</label>
+                        <input type="text" class="form-control" id="contactoCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tareaCrear">Tarea</label>
+                        <input type="text" class="form-control" id="tareaCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="especificacionCrear">Especificación</label>
+                        <input type="text" class="form-control" id="especificacionCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="observacionesCrear">Observaciones</label>
+                        <input type="text" class="form-control" id="observacionesCrear" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaCrear">Fecha</label>
+                        <input type="date" class="form-control" id="fechaCrear" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Crear</button>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
 
-    <script>
-        // Funcion para recibir datos y llenar la tabla
-        $(document).ready(function() {
-            // Simula la recepción de datos (modifica esta parte para que se conecte con tu archivo principal)
-            window.addEventListener('message', function(event) {
-                const datos = event.data;
-                if (datos && datos.tipo === 'nuevoDato') {
-                    agregarFila(datos.contenido);
+<!-- Modal para Editar -->
+<div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editarModalLabel">Editar Caso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditar">
+                    <input type="hidden" id="idEditar">
+                    <div class="form-group">
+                        <label for="nombreEditar">Nombre</label>
+                        <input type="text" class="form-control" id="nombreEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cargoEditar">Cargo</label>
+                        <input type="text" class="form-control" id="cargoEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="usuario_daEditar">Usuario DA</label>
+                        <input type="text" class="form-control" id="usuario_daEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="activo_fijo_equipoEditar">Activo Fijo</label>
+                        <input type="text" class="form-control" id="activo_fijo_equipoEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contrasenaEditar">Contrasena</label>
+                        <input type="text" class="form-control" id="contrasenaEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactoEditar">Contacto</label>
+                        <input type="text" class="form-control" id="contactoEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tareaEditar">Tarea</label>
+                        <input type="text" class="form-control" id="tareaEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="especificacionEditar">Especificación</label>
+                        <input type="text" class="form-control" id="especificacionEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="observacionesEditar">Observaciones</label>
+                        <input type="text" class="form-control" id="observacionesEditar" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaEditar">Fecha</label>
+                        <input type="date" class="form-control" id="fechaEditar" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Actualizar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" role="dialog" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarModalLabel">Eliminar Caso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro de que desea eliminar este caso?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Incluye Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Cargar los datos en la tabla
+        $.ajax({
+            url: './CRUD casos/leer.php',
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (response.length > 0) {
+                    response.forEach(function (caso) {
+                        $('#cuerpoTabla').append(`
+                            <tr id="caso-${caso.id}">
+                                <td>${caso.nombre}</td>
+                                <td>${caso.cargo}</td>
+                                <td>${caso.usuario_da}</td>
+                                <td>${caso.activo_fijo_equipo}</td>
+                                <td>${caso.contrasena}</td>
+                                <td>${caso.contacto}</td>
+                                <td>${caso.tarea}</td>
+                                <td>${caso.especificacion}</td>
+                                <td>${caso.observaciones}</td>
+                                <td>${caso.fecha}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm editar" data-id="${caso.id}">Editar</button>
+                                    <button class="btn btn-danger btn-sm eliminar" data-id="${caso.id}">Eliminar</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
                 }
-            });
+            }
         });
-
-        function agregarFila(data) {
-            const fila = `
+    
+        // Abrir modal de crear
+        $('#crearModal').on('show.bs.modal', function () {
+            $('#formCrear')[0].reset();
+        });
+    
+        // Enviar formulario de crear caso
+        $('#formCrear').submit(function (e) {
+            e.preventDefault();
+            var formData = {
+                nombre: $('#nombreCrear').val(),
+                cargo: $('#cargoCrear').val(),
+                usuario_da: $('#usuario_daCrear').val(),
+                activo_fijo_equipo: $('#activo_fijo_equipoCrear').val(),
+                contrasena: $('#contrasenaCrear').val(),
+                contacto: $('#contactoCrear').val(),
+                tarea: $('#tareaCrear').val(),
+                especificacion: $('#especificacionCrear').val(),
+                observaciones: $('#observacionesCrear').val(),
+                fecha: $('#fechaCrear').val()
+            };
+            $.ajax({
+    url: './CRUD casos/crear.php',
+    type: 'POST',
+    data: formData,
+    success: function (response) {
+        try {
+            // Verifica que la respuesta sea un JSON válido
+            var data = JSON.parse(response);
+            // Procede con el manejo de la respuesta
+            $('#crearModal').modal('hide');
+            $('#cuerpoTabla').append(`
                 <tr>
-                    <td>${data.usuario}</td>
-                    <td>${data.nombre}</td>
-                    <td>${data.cargo}</td>
-                    <td>${data.usuarioDa}</td>
-                    <td>${data.activoFijo}</td>
-                    <td>${data.contrasena}</td>
-                    <td>${data.contacto}</td>
-                    <td>${data.tarea}</td>
-                    <td>${data.especificacion}</td>
-                    <td>${data.observaciones}</td>
-                    <td>${data.fecha}</td>
+                    <td>${formData.nombre}</td>
+                    <td>${formData.cargo}</td>
+                    <td>${formData.usuario_da}</td>
+                    <td>${formData.activo_fijo_equipo}</td>
+                    <td>${formData.contrasena}</td>
+                    <td>${formData.contacto}</td>
+                    <td>${formData.tarea}</td>
+                    <td>${formData.especificacion}</td>
+                    <td>${formData.observaciones}</td>
+                    <td>${formData.fecha}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" onclick="editarFila(this)">Editar</button>
-                        <button class="btn btn-danger btn-sm" onclick="eliminarFila(this)">Eliminar</button>
+                        <button class="btn btn-warning btn-sm editar" data-id="${response.id}">Editar</button>
+                        <button class="btn btn-danger btn-sm eliminar" data-id="${response.id}">Eliminar</button>
                     </td>
-                </tr>`;
-            $('#cuerpoTabla').append(fila);
+                </tr>
+            `);
+            alert('Caso creado con éxito.');
+        } catch (e) {
+            console.error("Error al analizar la respuesta JSON: ", e);
+            alert('Hubo un problema al procesar la respuesta del servidor.');
         }
+    },
+    error: function (xhr, status, error) {
+        console.error("Error en la solicitud AJAX: ", error);
+        alert('Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.');
+    }
+});
+        });
+        // Enviar formulario de crear caso
+        $('#formCrear').submit(function (e) {
+    e.preventDefault();
+    var formData = {
+        nombre: $('#nombreCrear').val(),
+        cargo: $('#cargoCrear').val(),
+        usuario_da: $('#usuario_daCrear').val(),
+        activo_fijo_equipo: $('#activo_fijo_equipoCrear').val(),
+        contrasena: $('#contrasenaCrear').val(),
+        contacto: $('#contactoCrear').val(),
+        tarea: $('#tareaCrear').val(),
+        especificacion: $('#especificacionCrear').val(),
+        observaciones: $('#observacionesCrear').val(),
+        fecha: $('#fechaCrear').val()
+    };
 
-        function editarFila(boton) {
-            const fila = $(boton).closest('tr');
-            const celdas = fila.find('td').not(':last');
-            celdas.each(function() {
-                const valorActual = $(this).text();
-                $(this).html(`<input type="text" class="form-control" value="${valorActual}">`);
-            });
-            $(boton).text('Guardar').attr('onclick', 'guardarFila(this)');
-        }
+    console.log("Datos enviados al servidor:", formData);
 
-        function guardarFila(boton) {
-            const fila = $(boton).closest('tr');
-            fila.find('td').not(':last').each(function() {
-                const input = $(this).find('input');
-                if (input.length) {
-                    $(this).text(input.val());
+    $.ajax({
+        url: './CRUD casos/crear.php',
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            console.log("Respuesta del servidor:", response);
+            try {
+                var data = JSON.parse(response);
+                if (data.success) {
+                    alert('Caso creado con éxito.');
+                    $('#crearModal').modal('hide');
+                    cargarTabla();
+                } else {
+                    alert('Error al crear el caso: ' + data.error);
                 }
-            });
-            $(boton).text('Editar').attr('onclick', 'editarFila(this)');
+            } catch (e) {
+                console.error("Error al analizar la respuesta JSON:", e);
+                alert('Error al procesar la respuesta del servidor.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error en la solicitud AJAX:", error);
+            alert('Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.');
         }
+    });
+});
 
-        function eliminarFila(boton) {
-            $(boton).closest('tr').remove();
+
+// Función para recargar la tabla
+function cargarTabla() {
+    $.ajax({
+        url: './CRUD casos/leer.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function (response) {
+            $('#cuerpoTabla').empty();  // Limpia la tabla antes de volver a cargar
+            if (response.length > 0) {
+                response.forEach(function (caso) {
+                    $('#cuerpoTabla').append(`
+                        <tr id="caso-${caso.id}">
+                            <td>${caso.nombre}</td>
+                            <td>${caso.cargo}</td>
+                            <td>${caso.usuario_da}</td>
+                            <td>${caso.activo_fijo_equipo}</td>
+                            <td>${caso.contrasena}</td>
+                            <td>${caso.contacto}</td>
+                            <td>${caso.tarea}</td>
+                            <td>${caso.especificacion}</td>
+                            <td>${caso.observaciones}</td>
+                            <td>${caso.fecha}</td>
+                            <td>
+                                <button class="btn btn-warning btn-sm editar" data-id="${caso.id}">Editar</button>
+                                <button class="btn btn-danger btn-sm eliminar" data-id="${caso.id}">Eliminar</button>
+                            </td>
+                        </tr>
+                    `);
+                });
+            }
         }
-    </script>
+    });
+}
+    
+$(document).on('click', '.eliminar', function () {
+    var casoId = $(this).data('id');
+
+    // Abre el modal de confirmación
+    $('#eliminarModal').modal('show');
+
+    // Eliminar manejadores previos antes de agregar uno nuevo
+    $('#confirmarEliminar').off('click').on('click', function () {
+        $.ajax({
+            url: './CRUD casos/eliminar.php',
+            type: 'POST',
+            data: { id: casoId },
+            dataType: 'json', // Especificar el tipo de datos esperado
+            success: function (response) {
+                if (response.success) {
+                    // Eliminar fila de la tabla
+                    $('#caso-' + casoId).remove();
+                    alert('Caso eliminado con éxito'); // Mostrar alerta
+                } else {
+                    alert('Error al eliminar el caso: ' + response.error);
+                }
+
+                // Cerrar el modal
+                $('#eliminarModal').modal('hide');
+            },
+            error: function (xhr, status, error) {
+                console.error('Error en la solicitud AJAX:', error);
+                alert('Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.');
+            }
+        });
+    });
+});
+        // Filtrar por nombre
+        $('#formBuscar').submit(function (e) {
+                        e.preventDefault();
+                        var nombre = $('#buscarNombre').val().toLowerCase();
+                        $('#cuerpoTabla tr').each(function () {
+                            var nombreFila = $(this).find('td').eq(0).text().toLowerCase();
+                            if (nombreFila.indexOf(nombre) !== -1) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                })
+</script>
 </body>
 </html>
+
