@@ -225,63 +225,8 @@
             $('#formCrear')[0].reset();
         });
     
-        // Enviar formulario de crear caso
-        $('#formCrear').submit(function (e) {
-            e.preventDefault();
-            var formData = {
-                nombre: $('#nombreCrear').val(),
-                cargo: $('#cargoCrear').val(),
-                usuario_da: $('#usuario_daCrear').val(),
-                activo_fijo_equipo: $('#activo_fijo_equipoCrear').val(),
-                contrasena: $('#contrasenaCrear').val(),
-                contacto: $('#contactoCrear').val(),
-                tarea: $('#tareaCrear').val(),
-                especificacion: $('#especificacionCrear').val(),
-                observaciones: $('#observacionesCrear').val(),
-                fecha: $('#fechaCrear').val()
-            };
-            $.ajax({
-    url: './CRUD casos/crear.php',
-    type: 'POST',
-    data: formData,
-    success: function (response) {
-        try {
-            // Verifica que la respuesta sea un JSON válido
-            var data = JSON.parse(response);
-            // Procede con el manejo de la respuesta
-            $('#crearModal').modal('hide');
-            $('#cuerpoTabla').append(`
-                <tr>
-                    <td>${formData.nombre}</td>
-                    <td>${formData.cargo}</td>
-                    <td>${formData.usuario_da}</td>
-                    <td>${formData.activo_fijo_equipo}</td>
-                    <td>${formData.contrasena}</td>
-                    <td>${formData.contacto}</td>
-                    <td>${formData.tarea}</td>
-                    <td>${formData.especificacion}</td>
-                    <td>${formData.observaciones}</td>
-                    <td>${formData.fecha}</td>
-                    <td>
-                        <button class="btn btn-warning btn-sm editar" data-id="${response.id}">Editar</button>
-                        <button class="btn btn-danger btn-sm eliminar" data-id="${response.id}">Eliminar</button>
-                    </td>
-                </tr>
-            `);
-            alert('Caso creado con éxito.');
-        } catch (e) {
-            console.error("Error al analizar la respuesta JSON: ", e);
-            alert('Hubo un problema al procesar la respuesta del servidor.');
-        }
-    },
-    error: function (xhr, status, error) {
-        console.error("Error en la solicitud AJAX: ", error);
-        alert('Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.');
-    }
-});
-        });
-        // Enviar formulario de crear caso
-        $('#formCrear').submit(function (e) {
+         // Enviar formulario de crear caso
+         $('#formCrear').submit(function (e) {
     e.preventDefault();
     var formData = {
         nombre: $('#nombreCrear').val(),
@@ -299,33 +244,26 @@
     console.log("Datos enviados al servidor:", formData);
 
     $.ajax({
-        url: './CRUD casos/crear.php',
-        type: 'POST',
-        data: formData,
-        success: function (response) {
-            console.log("Respuesta del servidor:", response);
-            try {
-                var data = JSON.parse(response);
-                if (data.success) {
-                    alert('Caso creado con éxito.');
-                    $('#crearModal').modal('hide');
-                    cargarTabla();
-                } else {
-                    alert('Error al crear el caso: ' + data.error);
-                }
-            } catch (e) {
-                console.error("Error al analizar la respuesta JSON:", e);
-                alert('Error al procesar la respuesta del servidor.');
-            }
-        },
-        error: function (xhr, status, error) {
-            console.error("Error en la solicitud AJAX:", error);
-            alert('Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.');
+    url: './CRUD casos/crear.php',
+    type: 'POST',
+    data: formData,
+    success: function (response) {
+        console.log("Respuesta del servidor:", response);
+        // No es necesario hacer JSON.parse() porque la respuesta es ya un objeto
+        if (response.success) {
+            alert('Caso creado con éxito.');
+            $('#crearModal').modal('hide');
+            cargarTabla();  // Función para recargar la tabla
+        } else {
+            alert('Error al crear el caso: ' + response.message);
         }
-    });
+    },
+    error: function (xhr, status, error) {
+        console.error("Error en la solicitud AJAX:", error);
+        alert('Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.');
+    }
 });
-
-
+         })
 // Función para recargar la tabla
 function cargarTabla() {
     $.ajax({
@@ -384,6 +322,7 @@ $(document).on('click', '.eliminar', function () {
 
                 // Cerrar el modal
                 $('#eliminarModal').modal('hide');
+                cargarTabla();
             },
             error: function (xhr, status, error) {
                 console.error('Error en la solicitud AJAX:', error);
@@ -405,7 +344,84 @@ $(document).on('click', '.eliminar', function () {
                             }
                         });
                     });
-                })
+                });
+// Evento cuando se hace clic en el botón de "Editar"
+$(document).on('click', '.editar', function () {
+    var casoId = $(this).data('id');  // Obtener el ID del caso seleccionado
+
+    // Hacer una solicitud AJAX para obtener los datos del caso
+    $.ajax({
+        url: './CRUD casos/leercaso.php', // Usar leercaso.php para obtener los datos del caso
+        type: 'GET',
+        data: { id: casoId },  // Pasar el ID del caso a la API
+        success: function (response) {
+            if (response && !response.error) {
+                // Llenar los campos del formulario con los datos del caso
+                $('#idEditar').val(response.id);
+                $('#nombreEditar').val(response.nombre);
+                $('#cargoEditar').val(response.cargo);
+                $('#usuario_daEditar').val(response.usuario_da);
+                $('#activo_fijo_equipoEditar').val(response.activo_fijo_equipo);
+                $('#contrasenaEditar').val(response.contrasena);
+                $('#contactoEditar').val(response.contacto);
+                $('#tareaEditar').val(response.tarea);
+                $('#especificacionEditar').val(response.especificacion);
+                $('#observacionesEditar').val(response.observaciones);
+                $('#fechaEditar').val(response.fecha);  // Asegúrate de que la fecha sea compatible con el input de tipo date
+
+                // Mostrar el modal con los datos precargados
+                $('#editarModal').modal('show');
+            } else {
+                alert('No se encontraron los datos para este caso.');
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error al cargar los datos del caso:', error);
+            alert('Hubo un error al cargar los datos del caso. Intenta de nuevo.');
+        }
+    });
+});
+
+//funcion para editar los datos
+$('#formEditar').submit(function (e) {
+    e.preventDefault();  // Prevenir el comportamiento por defecto del formulario
+
+    // Obtener los valores de los campos del formulario
+    var formData = {
+        id: $('#idEditar').val(),  // ID del caso
+        nombre: $('#nombreEditar').val(),
+        cargo: $('#cargoEditar').val(),
+        usuario_da: $('#usuario_daEditar').val(),
+        activo_fijo_equipo: $('#activo_fijo_equipoEditar').val(),
+        contrasena: $('#contrasenaEditar').val(),
+        contacto: $('#contactoEditar').val(),
+        tarea: $('#tareaEditar').val(),
+        especificacion: $('#especificacionEditar').val(),
+        observaciones: $('#observacionesEditar').val(),
+        fecha: $('#fechaEditar').val()
+    };
+
+    // Enviar los datos al servidor para actualizar el caso
+    $.ajax({
+        url: './CRUD casos/actualizar.php',  // La URL que procesa la actualización en la base de datos
+        type: 'POST',
+        data: formData,
+        success: function (response) {
+            if (response.success) {
+                alert('Caso actualizado con éxito.');
+                $('#editarModal').modal('hide');
+                cargarTabla();  // Recargar la tabla para reflejar los cambios
+            } else {
+                alert('Error al actualizar el caso: ' + response.error);
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error en la solicitud AJAX:', error);
+            alert('Hubo un error al realizar la solicitud. Intenta de nuevo más tarde.');
+        }
+    });
+});
+
 </script>
 </body>
 </html>

@@ -37,3 +37,81 @@ Array
     [observaciones] => rhrtehrth
     [fecha] => 2024-11-15
 )
+Array
+(
+    [nombre] => hhsjadasdsadsadad
+    [cargo] => asdsadsa
+    [usuario_da] => dsaasd
+    [activo_fijo_equipo] => asdsad
+    [contrasena] => asdasdas
+    [contacto] => sadasdas
+    [tarea] => dsadsad
+    [especificacion] => asdasd
+    [observaciones] => dasdasdsa
+    [fecha] => 2024-11-27
+)
+Array
+(
+    [nombre] => hhsjadasdsadsadad
+    [cargo] => asdsadsa
+    [usuario_da] => dsaasd
+    [activo_fijo_equipo] => asdsad
+    [contrasena] => asdasdas
+    [contacto] => sadasdas
+    [tarea] => dsadsad
+    [especificacion] => asdasd
+    [observaciones] => dasdasdsa
+    [fecha] => 2024-11-27
+)
+Array
+(
+    [nombre] => sdfsdf
+    [cargo] => sdfsdf
+    [usuario_da] => sdfsd
+    [activo_fijo_equipo] => sdfs
+    [contrasena] => sdfsd
+    [contacto] => sdfsdfsd
+    [tarea] => fsdfsdf
+    [especificacion] => sdfsdfsd
+    [observaciones] => fsdfs
+    [fecha] => 2024-11-28
+)
+Array
+(
+    [nombre] => qweweqweqweweq
+    [cargo] => weqweqweqweqweqweq
+    [usuario_da] => weqweqweqweqweq
+    [activo_fijo_equipo] => weweqweqweq
+    [contrasena] => weqwqeweqweq
+    [contacto] => weqweqweqwqe
+    [tarea] => weqwqeweqweq
+    [especificacion] => weqweqweqweq
+    [observaciones] => weweqweqweqweq
+    [fecha] => 2024-11-29
+)
+Array
+(
+    [nombre] => 11111111111
+    [cargo] => 1111111111
+    [usuario_da] => 111111111111
+    [activo_fijo_equipo] => 1111111111111
+    [contrasena] => 11111111111
+    [contacto] => 111111111111
+    [tarea] => 1111111111
+    [especificacion] => 111111111111
+    [observaciones] => 111111111111
+    [fecha] => 2024-11-30
+)
+Array
+(
+    [nombre] => jhjhjhj
+    [cargo] => jhjhjh
+    [usuario_da] => jhjhjh
+    [activo_fijo_equipo] => jhjhjh
+    [contrasena] => jhjhjh
+    [contacto] => hjhjhj
+    [tarea] => hjhjhjhj
+    [especificacion] => hjhjh
+    [observaciones] => jhjhjhjhj
+    [fecha] => 2024-12-02
+)
