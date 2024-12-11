@@ -15,123 +15,119 @@
   
     <style>
         .titulo {
-            font-size: 25px; 
-            color: red;
-            font-family: arial;  
-            margin-top: 50px;         
-        }
-        .container {
-            margin-bottom: 4.5cm;
-            margin-top: 4.5cm;
-            margin-left: 4.5cm;
-            margin-right: 4.5cm;
-            padding: 0px;
-            width: auto;
-            max-width: 2700px;
-        }
-        .form-container {
-            padding: 20px;
-            border-radius: 15px;
-            border: 2px solid rgba(201, 0, 0, 0.564);
-            box-shadow: 0 6px 10px rgba(0.1, 0.2, 0.3, 0.4);
-            width: 100%;
-            max-width: 100%;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .btn-red {
-            background-color: rgb(196, 0, 0);
-            color: white;
-            font-size: 18px;
-            width: auto;
-            margin-top: 20px;
-            border-radius: 7px;
-        }
-        .left-column, .right-column {
-            padding: 10px;
-        }
-        .left-column {
-            flex: 1;
-            padding-right: 20px;
-        }
-        .right-column {
-            flex: 1;
-            padding-left: 20px;
-        }
-        .tooltip-icon {
-            margin-left: 5px;
-            cursor: pointer;
-            color: #007bff;
-        }
-        .calendario {
-            width: 100%;
-            max-width: 300px;
-            border-collapse: collapse;
-            margin: 0 auto;
-            font-family: Arial, sans-serif;
-        }
-
-        .calendario th, .calendario td {
-            border: 1px solid #ddd;
-            padding: 5px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .calendario th {
-            background-color: #ff0000d1;
-            color: white;
-        }
-
-        /* Modificación para los días no disponibles en todos los meses */
-.calendario .no-disponible {
-    background-color: #d3d3d3; /* Gris claro */
-    color: #a0a0a0; /* Gris oscuro */
-    pointer-events: none;
-    cursor: not-allowed;
+    font-size: 25px; 
+    color: red;
+    font-family: arial;  
+    margin-top: 50px;         
+}
+.container {
+    margin-bottom: 4.5cm;
+    margin-top: 4.5cm;
+    margin-left: 4.5cm;
+    margin-right: 4.5cm;
+    padding: 0px;
+    width: auto;
+    max-width: 2700px;
+}
+.form-container {
+    padding: 20px;
+    border-radius: 15px;
+    border: 2px solid rgba(201, 0, 0, 0.564);
+    box-shadow: 0 6px 10px rgba(0.1, 0.2, 0.3, 0.4);
+    width: 100%;
+    max-width: 100%;
+}
+.form-group {
+    margin-bottom: 1.5rem;
+}
+.btn-red {
+    background-color: rgb(196, 0, 0);
+    color: white;
+    font-size: 18px;
+    width: auto;
+    margin-top: 20px;
+    border-radius: 7px;
+}
+.left-column, .right-column {
+    padding: 10px;
+}
+.left-column {
+    flex: 1;
+    padding-right: 20px;
+}
+.right-column {
+    flex: 1;
+    padding-left: 20px;
+}
+.tooltip-icon {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #007bff;
+}
+.calendario {
+    max-height: 400px;
+    width: 100%;
+    padding: 0px;
+    max-width: 350px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+.calendario th {
+    margin-top: 0px;
+    background-color: #ff0000d1;
+    color: white;
+    height: 16px;
+}
+/* Reducir altura de las celdas */
+.fc {
+    border: 0px solid #ddd; /* Borde alrededor del calendario */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: white; /* Fondo blanco uniforme */
 }
 
-/* Modificación para los días disponibles en azul (similar a noviembre) */
-.calendario .disponible {
-    background-color: #d4f0ff; /* Azul claro */
-    color: black;
+.fc-header-toolbar {
+    margin-bottom: -1px; /* Une la toolbar y la cuadrícula de días */
+    padding: 0; /* Elimina padding interno */
+    background-color: #ff0000; /* Fondo rojo */
+    color: white; /* Texto blanco */
 }
 
-/* Días seleccionados en amarillo */
-.calendario .fc-day-selected {
-    background-color: #000000; /* Amarillo */
-    color: black;
+.fc-toolbar {
+    background-color: #ff0000; /* Fondo rojo */
+    color: white;
+    text-align: center;
 }
 
-/* Para los días de hoy */
-.calendario .today {
-    background-color: #3c53ff; /* Amarillo */
-    color: black;
+.fc-toolbar-title {
+    font-size: 16px;
+    font-weight: bold;
 }
-        .calendario td {
-            transition: background-color 0.2s ease-in-out;
-        }
 
-        /* Estilo para el encabezado */
-        .fc-toolbar {
-            background-color: #ff0000;
-            color: white;
-            text-align: center;
-        }
+.fc-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
 
-        .fc-toolbar button {
-            background-color: transparent;
-            border: none;
-            color: white;
-        }
+.fc-daygrid {
+    margin-top: 0; /* Elimina espacio extra entre toolbar y cuadrícula */
+}
 
-        .fc-toolbar .fc-prev-button, .fc-toolbar .fc-next-button {
-            background-color: transparent;
-            border: none;
-            color: white;
-        }
-    </style>
+.fc-daygrid-day-top {
+    font-size: 20px; /* Reducir tamaño de los números de los días */
+    height: 0px;
+}
+
+.fc-daygrid-day {
+    padding: 0; /* Quita padding interno de las celdas */
+}
+
+.fc-scroller-harness {
+    overflow: visible; /* Permite que el contenido fluya sin restricciones */
+}
+</style>
 </head>
 <body>
 <div class="container">
@@ -241,6 +237,8 @@
             right: ''
         },
         validRange: getValidRange(), // Limitar a los dos próximos meses
+        height: 'auto', // Ajusta la altura automáticamente para que la barra quede unida al calendario
+        contentHeight: 'auto' // Ajusta el contenido para unir la barra y el calendario
     });
 
     // Evento para cuando se hace clic en una fecha
@@ -361,6 +359,8 @@ function sendFormData(data) {
 
     // Mostrar alerta con la información
     alert(`Se ha creado el caso exitosamente. Caso ${numero_caso} con el ingeniero ${nombre_ingeniero}.`);
+    $('#mantenimientoForm')[0].reset();
+    $('#mantenimientoForm').find(':submit').prop('disabled', true); // Desactiva el botón de envío
 },
 
         error: function(xhr, status, error) {
